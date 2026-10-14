@@ -141,6 +141,22 @@ describe('totals', () => {
   });
 });
 
+describe('allocation shares', () => {
+  it('always add up to exactly 100.00%', () => {
+    const three = allocation({ gold: 100n, silver: 100n, platinum: 100n, palladium: 0n })!;
+    expect(three.map((p) => p.bp)).toEqual([3334n, 3333n, 3333n]);
+    let seed = 7;
+    const rand = (max: number): number => {
+      seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+      return seed % max;
+    };
+    for (let i = 0; i < 5000; i += 1) {
+      const parts = allocation({ gold: BigInt(rand(10_000_000)), silver: BigInt(rand(10_000_000)), platinum: BigInt(rand(1000)), palladium: BigInt(rand(3)) });
+      if (parts) expect(parts.reduce((a, p) => a + p.bp, 0n)).toBe(10_000n);
+    }
+  });
+});
+
 describe('money text', () => {
   it('groups thousands and pads cents', () => {
     expect(formatCents(5n)).toBe('$0.05');

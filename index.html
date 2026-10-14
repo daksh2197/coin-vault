@@ -237,7 +237,7 @@
               <label for="lock-on">Lock the file with a passphrase</label>
             </div>
             <div id="lock-fields" hidden>
-              <p class="warn">If you forget this passphrase, nobody can recover the file. Not me, not anyone. There is no reset.</p>
+              <p class="warn">If you forget this passphrase, nobody can recover the file. Nobody can, including me. There is no reset.</p>
               <div class="field">
                 <label for="lock-pass">Passphrase (at least 8 characters)</label>
                 <input id="lock-pass" type="password" autocomplete="new-password" />
@@ -296,7 +296,10 @@
           <button type="button" class="btn btn-ghost" id="open-sheet">Open the inventory sheet</button>
         </section>
 
-        <section class="block about" id="about" aria-labelledby="about-h" data-chrome>
+      </div>
+
+      <div id="about-wrap" data-noprint>
+<section class="block about" id="about" aria-labelledby="about-h" data-chrome>
           <h2 id="about-h">How it is stored</h2>
           <p>
             The data lives in IndexedDB, a database built into your browser, on this device only. This site has no server that could receive it.
@@ -304,7 +307,7 @@
             Save a backup file now and then.
           </p>
           <p>
-            Photos are not supported in this version. Prices come from you, not from the internet.
+            Photos are not supported in this version. You type the prices.
             Source and the long version: <a href="%REPO_URL%">the repository</a>.
           </p>
         </section>
@@ -324,6 +327,7 @@
     <footer class="site-foot" data-chrome>
       <p>
         MIT licence. Built in Calgary by <a href="https://dakshdua.ca">Daksh Dua</a>.
+        <a href="./THIRD-PARTY-NOTICES.txt">Font licences</a>.
       </p>
     </footer>
   </body>

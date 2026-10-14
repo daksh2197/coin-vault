@@ -118,13 +118,22 @@ export function spotDatesUsed(lines: readonly Line[]): string[] {
   return [...dates].sort();
 }
 
-/** Percentage of melt value by metal in basis points of the whole; null when there is no melt value. */
+/** Percentage of melt value by metal in basis points of the whole, adding to exactly 10,000; null when there is no melt value. */
 export function allocation(meltByMetal: Record<Metal, bigint>): { metal: Metal; melt: bigint; bp: bigint }[] | null {
   const total = METALS.reduce((a, m) => a + meltByMetal[m], 0n);
   if (total <= 0n) return null;
-  return METALS.filter((m) => meltByMetal[m] > 0n).map((metal) => ({
-    metal,
-    melt: meltByMetal[metal],
-    bp: divRoundHalfUp(meltByMetal[metal] * 10_000n, total),
-  }));
+  // Largest remainder: each metal gets its whole basis points, then the leftover points go to the
+  // biggest fractional parts, so the shares always add up to exactly 100.00%.
+  const present = METALS.filter((m) => meltByMetal[m] > 0n);
+  const parts = present.map((metal) => {
+    const scaled = meltByMetal[metal] * 10_000n;
+    return { metal, melt: meltByMetal[metal], bp: scaled / total, rest: scaled % total };
+  });
+  let leftover = 10_000n - parts.reduce((a, p) => a + p.bp, 0n);
+  for (const p of [...parts].sort((a, b) => (b.rest > a.rest ? 1 : b.rest < a.rest ? -1 : 0))) {
+    if (leftover <= 0n) break;
+    p.bp += 1n;
+    leftover -= 1n;
+  }
+  return parts.map(({ metal, melt, bp }) => ({ metal, melt, bp }));
 }

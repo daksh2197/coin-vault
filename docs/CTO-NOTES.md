@@ -92,7 +92,7 @@ A service worker saves the app on the first visit, so it opens with no signal. A
 | Sentences that include a date or count | `src/ui/words.ts` |
 | A label, a button or a form field | `index.html` |
 | What happens on a click | `src/main.ts` |
-| A colour or a font | `src/styles/brand.css` |
+| A brand colour or font name | `src/styles/brand.css` (the font files are in `src/styles/fonts.css`; the metal colours in `app.css`) |
 | Layout, spacing, the printed sheet | `src/styles/app.css` |
 | The invented demo rows | `src/core/sample.ts` |
 
@@ -117,9 +117,9 @@ A service worker saves the app on the first visit, so it opens with no signal. A
 Five real changes, easiest first. Each one is a commit with your name on it. Run `npm test` after each.
 
 1. **Add a size shortcut.** In `index.html`, copy the line for the `1 oz` button (`data-size="1"`), and add one next to it with `data-size="20"` and the label `20 oz`. *Done when:* pressing it fills 20 into the weight box and the box below reads "622.069536 g".
-2. **Change the rule.** In `src/ui/words.ts` set `STALE_DAYS` to `3`. *Done when:* `npm test` goes red. Read the failure to see which test caught you, then decide: change it back, or update the test and the "seven days" in `README.md`. That red X is the safety net doing its job.
+2. **Change the rule.** In `src/ui/words.ts` set `STALE_DAYS` to `3`. *Done when:* `npm test` goes red. Read the failure to see which test caught you, then decide: change it back, or update the test and the "seven days" in `README.md`. The backup reminder has its own constant, `BACKUP_NAG_DAYS`, because Safari's seven days is a different rule. That red X is the safety net doing its job.
 3. **Write a test.** In `src/core/melt.test.ts`, inside the first `describe`, add a case: 10 grams of 0.9999 gold at an invented $6,000.00 an ounce. Build the holding with `weightNg: '10000000000'` and `finenessPpm: 999900`, and call `meltCents(gold({ weightNg: '10000000000' }), 600000)`. Work out the answer by hand first: 10 g x 0.9999 = 9.999 g, divided by 31.1034768 g per ounce, times 6000. *Done when:* the test passes with your hand-worked figure. If it fails, you have found either a bug or an arithmetic slip, and both are worth knowing about.
-4. **Lengthen the passphrase rule.** In `src/core/lock.ts` set `MIN_PASSPHRASE_CHARS` to `12`. *Done when:* the build says what breaks. A test in `lock.test.ts` that expects an eight-character passphrase to be accepted will fail. Update that test, and update the label text in `index.html` that says "at least 8 characters".
+4. **Lengthen the passphrase rule.** In `src/core/lock.ts` set `MIN_PASSPHRASE_CHARS` to `12`. *Done when:* `npm test` says what breaks. A test in `lock.test.ts` that expects an eight-character passphrase to be accepted will fail. The type checker and the build still pass, which is a reminder that only tests catch a rule change. Update that test, the label text in `index.html` that says "at least 8 characters", and the same words in `docs/THE-DATABASE.md`.
 5. **Add a field.** Add "Serial number" (optional text, up to 40 characters). It touches every layer, and the type checker is your checklist: `Holding` in `types.ts`; the `LIMITS` and the loop over `'mint' | 'location' | 'note'` in `schema.ts`, which drops any field it does not know, so skipping this step makes the value vanish on save; `HoldingInput`, `buildHolding()` and `holdingToInput()` in `form.ts`, plus the `HoldingInput` object in `form.test.ts`; a labelled box and an error line in `index.html`; and `FIELDS` and `BLANK` in `main.ts`. *Done when:* a serial number survives save, edit, export and import, and a test in `form.test.ts` proves it. This is the one to talk through with Claude. Ask it to explain each change before you accept it.
 
 ## 6. Questions you should be ready for

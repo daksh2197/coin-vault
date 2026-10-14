@@ -1,6 +1,6 @@
 # How this could pay for itself
 
-Coin Vault is free and stays free. This page is the honest version of how a free, private tool might earn, what each path needs to be true, and what I do not know yet.
+Coin Vault is free today, and what it does now stays free. This page is the honest version of how a free, private tool might earn, what each path needs to be true, and what I do not know yet.
 
 No market-size numbers. I have not measured a market, so I will not make one up.
 
@@ -14,12 +14,12 @@ Everything in the app today: the ledger, the three numbers, the allocation, the 
 
 ## Two ways it could earn
 
-### 1. A one-time unlock for insurance-ready exports
+### 1. A one-time unlock for a richer inventory export
 
-A fuller inventory document: photos on each page, purchase receipts attached, a cover page with the spot prices and their dates, a PDF that an insurer's form can sit next to. Still made on the device.
+A fuller inventory document for your own records: photos on each page, a cover page with the spot prices and their dates, a PDF you could keep beside paperwork such as an insurance form. Still made on the device. I have not asked any insurer what it would accept, so nothing here says it would.
 
-- **Price to test:** $19 once. Not a subscription. A coin collection changes slowly, and a monthly bill for a ledger would feel wrong.
-- **What has to be true:** people hold enough that they care about a record for insurance or an estate, and they find the printed sheet too plain.
+- **Price to test:** CA$19 once. Not a subscription. A coin collection changes slowly, and a monthly bill for a ledger would feel wrong.
+- **What has to be true:** people hold enough that they care about a good record of what they hold, and they find the printed sheet too plain.
 - **Cost to deliver:** photos and a richer print layout, so some days of building and a hosted checkout link.
 
 ### 2. Multiple vaults
@@ -45,26 +45,26 @@ There is no monthly bill to outrun. The break-even is the first sale.
 
 | Price | Sales needed |
 | ---: | ---: |
-| $19 | 27 |
+| CA$19 | 27 |
 
 Code does not produce those sales. Finding the tool does. Twenty-seven strangers have to see it, trust a page that asks for nothing, and want more.
 
 ## The one-week demand test (before building anything paid)
 
 1. Ship the free app.
-2. Add one link, "Get notified about insurance-ready exports", to a waitlist form. Nothing to buy yet.
+2. Add one link, "Get notified about a richer inventory export", to a waitlist form. Nothing to buy yet.
 3. Show the app to collectors in communities where sharing tools is welcome: a short screen recording with the sample data, and what it does and does not do.
 4. Count two numbers: clicks on the links I post (one tagged short link per post) and waitlist sign-ups. The app itself has no tracking and that is not changing, so I count at the door, not inside the room.
 
-**Go:** 25 or more sign-ups in a week. Build the export and email them.
-**No-go:** fewer than 5. The app is fine and the offer is wrong. Change the offer, not the code.
+**Go:** 25 or more sign-ups in a week. A sign-up is not a sale, and 27 sales would take more than 27 sign-ups, so this is a reason to build the export and ask those people, not proof of a business.
+**No-go:** fewer than 5. The app is fine and the offer is wrong. Change the offer and leave the code alone.
 **In between:** one more week with a different audience before deciding.
 
 ## What I don't know yet
 
 - Whether anyone wants a richer export enough to pay for it, or the plain sheet is enough.
 - Whether a second vault matters to anyone.
-- Whether people will keep a backup habit at all. If they do not, the best feature may be a louder reminder, and that is free.
+- Whether people will keep a backup habit at all. If they do not, a louder reminder may matter more than any paid feature, and it is free.
 
 ## Ground rules
 

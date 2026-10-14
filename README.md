@@ -17,14 +17,14 @@ The demo above uses invented sample coins and invented prices.
 
 A coin has three prices: what was paid for it, what the metal is worth today, and what a collector would pay. I wanted the first two side by side, with the gap between them, on a phone, without telling any website what anyone owns.
 
-The third price, the collector's, is not in here. Nobody can compute it, and I did not want to pretend.
+The third price, the collector's, is not in here. This app does not compute it, and I did not want to pretend.
 
 ## What it does
 
 - **Holds your coins and bars.** Name, metal (gold, silver, platinum, palladium), fineness, weight in grams or troy ounces, quantity, mint and year, what you paid and when, where it is kept, and a note for its story.
 - **Three numbers per holding and in total.** Paid, melt value at the spot price you typed, and the premium you paid over melt as a percentage. Gain or loss against paid sits beside them.
-- **Shows the date beside every price-based figure.** You type the spot price per metal. Each figure that uses it says which day you typed it, and flags a price older than seven days.
-- **Never invents a number.** No spot price for a metal means a dash, not zero. The totals say how many holdings were left out.
+- **Shows the date beside every price-based figure.** You type the spot price per metal. Each figure that uses it says which day you typed it, and the totals say so when the oldest price is more than seven days old.
+- **Never invents a number.** No spot price for a metal means a dash instead of a zero. The totals say how many holdings were left out.
 - **Splits your holdings by metal.** One bar and a table, by melt value.
 - **Exports and imports a JSON file.** Optionally locked with a passphrase (AES-GCM, key from PBKDF2). A wrong passphrase gives one clear message. A forgotten passphrase cannot be recovered, and the page says so before you set one.
 - **Prints an inventory sheet.** A white page, one row per holding, spot dates and the not-financial-advice line on it. Printing from anywhere in the app prints the sheet.
@@ -85,6 +85,8 @@ src/
     db.ts             IndexedDB and its migrations
     vaultfile.ts      export, import and merge of the backup file
     lock.ts           passphrase locking and unlocking
+    dates.ts          real dates, today, ages
+    types.ts          Holding, Spot, Metal
     sample.ts         the invented demo rows
     *.test.ts         the tests, next to the code they check
   ui/dom.ts           small helpers; text goes in with textContent only
@@ -100,7 +102,14 @@ Want the guided tour? [docs/CTO-NOTES.md](docs/CTO-NOTES.md) explains the ideas 
 
 ## What got caught along the way
 
-REVIEW_FINDINGS_PLACEHOLDER
+- **A weight my own parser refused.** I first allowed six decimal places for every weight. A test that typed the troy ounce in grams, 31.1034768, failed because that has seven. Grams now take nine places (exact to the nanogram) and ounces six.
+- **A Total row in invisible ink.** An independent review by a second Claude session that had not seen the build found that the printed inventory sheet showed its Total row in the dark theme's off-white on a white page. The tests could not see it, because it is a colour. It now has a print rule, and the browser check reads the computed colour in print mode.
+- **Shares that added up to 99.99%.** The same review found that rounding each metal's share on its own could make three equal metals read 33.33% three times. The shares now use largest-remainder rounding and always add to 100.00%, with a test over 5,000 random mixes.
+- **Two sevens.** One constant meant both "a spot price is getting old" and "Safari may clear a site left alone for a week". Changing one would have silently changed the other, so they are separate constants now.
+- **A future date that said "today".** A price dated in the future showed "(today)". It now says "dated in the future".
+- **A missing licence notice.** The three fonts need their licence text shipped with them. It is in `public/THIRD-PARTY-NOTICES.txt` now.
+
+The review also re-derived the maths in Python with exact fractions and compared 6,000 random typed inputs: no mismatches.
 
 ## How this was built
 
@@ -113,6 +122,7 @@ I build with Claude as my pair programmer. I bring the problem and decide what t
 - **Prices.** There is no price feed. I looked for a free one with terms that allow use from a browser with no key, and did not find one I could confirm. You type the spot price, and the app shows its date.
 - **Passphrase settings.** PBKDF2-HMAC-SHA256 with 600,000 rounds follows the [OWASP Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html) (CC BY-SA 4.0), cited and not copied. Read October 13, 2026.
 - **Safari's seven-day rule.** Described in [WebKit's tracking prevention post](https://webkit.org/blog/10218/full-third-party-cookie-blocking-and-more/). Read October 13, 2026.
+- **Fonts.** Bricolage Grotesque, Geist and Geist Mono ship inside the app under the SIL Open Font License 1.1. The notices are in [public/THIRD-PARTY-NOTICES.txt](public/THIRD-PARTY-NOTICES.txt).
 - **Sample data** is invented. Every sample row and price is labelled SAMPLE on screen.
 - **Not financial advice.** Melt value is the metal content at a price you typed. It is not a valuation or an appraisal.
 

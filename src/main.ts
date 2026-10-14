@@ -434,6 +434,7 @@ async function submitHolding(event: Event): Promise<void> {
   if (ok) {
     closeForm();
     setText(el('holdings-status'), `${saved.name} saved.`);
+    el('add-holding').focus();
   }
 }
 
@@ -449,6 +450,7 @@ async function submitSpots(event: Event): Promise<void> {
   for (const metal of METALS) {
     setText(el(`err-spot-${metal}`), '');
     input(`spot-${metal}`).removeAttribute('aria-invalid');
+    input(`spot-${metal}`).removeAttribute('aria-describedby');
     const price = input(`spot-${metal}`).value;
     if (price.trim() === '') {
       if (state.spots.some((s) => s.metal === metal)) toDelete.push(metal);
@@ -459,6 +461,7 @@ async function submitSpots(event: Event): Promise<void> {
       bad += 1;
       setText(el(`err-spot-${metal}`), spot.error);
       input(`spot-${metal}`).setAttribute('aria-invalid', 'true');
+      input(`spot-${metal}`).setAttribute('aria-describedby', `err-spot-${metal}`);
       continue;
     }
     const prev = state.spots.find((s) => s.metal === metal);
@@ -515,6 +518,8 @@ async function exportBackup(): Promise<void> {
     el<HTMLButtonElement>('export-btn').disabled = false;
   }
   download(name, text);
+  input('lock-pass').value = '';
+  input('lock-pass2').value = '';
   await change(() => vault.setLastBackup(now.toISOString()));
   setText(el('export-status'), `Saved ${name}. ${state.holdings.length} ${state.holdings.length === 1 ? 'holding' : 'holdings'}.`);
 }
@@ -635,7 +640,10 @@ function wire(): void {
     } else if (d.deleteYes) {
       const id = d.deleteYes;
       pendingDelete = null;
-      void change(() => vault.deleteHolding(id)).then(() => setText(el('holdings-status'), 'Deleted.'));
+      void change(() => vault.deleteHolding(id)).then(() => {
+        setText(el('holdings-status'), 'Deleted.');
+        el('add-holding').focus();
+      });
     }
   });
 
@@ -678,12 +686,13 @@ function wire(): void {
   });
   el('erase-confirm').addEventListener('click', () => {
     erase(false);
-    void change(() => vault.replaceAll([], [])).then(() => setText(el('import-status'), 'Everything was erased from this browser.'));
+    void change(() => vault.replaceAll([], [])).then(() => setText(el('import-status'), 'All holdings and spot prices were erased from this browser.'));
   });
 
   const showSheet = (on: boolean): void => {
     el('sheet-view').hidden = !on;
     el('vault-view').hidden = on;
+    el('about-wrap').hidden = on;
     if (on) el('sheet-view').scrollIntoView({ block: 'start' });
   };
   el('open-sheet').addEventListener('click', () => showSheet(true));

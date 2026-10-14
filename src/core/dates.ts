@@ -30,7 +30,8 @@ export function daysBetween(from: string, to: string): number {
 }
 
 export function ageWords(days: number): string {
-  if (days <= 0) return 'today';
+  if (days < 0) return 'dated in the future';
+  if (days === 0) return 'today';
   if (days === 1) return '1 day ago';
   return `${days} days ago`;
 }

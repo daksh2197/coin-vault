@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Line } from '../core/melt';
-import { asOf, asOfTotals, backupStatus, excludedText, missingSpotText, STALE_DAYS } from './words';
+import { asOf, asOfTotals, BACKUP_NAG_DAYS, backupStatus, excludedText, missingSpotText, STALE_DAYS } from './words';
 
 const spot = (enteredOn: string, sample = false) => ({ metal: 'gold' as const, centsPerOzt: 1, enteredOn, ...(sample ? { sample: true as const } : {}) });
 const line = (s: ReturnType<typeof spot> | null): Line => ({ holding: {} as Line['holding'], paid: 0n, melt: s ? 0n : null, spot: s, gap: null, premiumBp: null, gain: null });
@@ -10,6 +10,10 @@ describe('the date beside every figure', () => {
     expect(asOf(spot('2026-10-14'), '2026-10-14')).toBe('spot 2026-10-14 (today)');
     expect(asOf(spot('2026-10-01'), '2026-10-14')).toBe('spot 2026-10-01 (13 days ago)');
     expect(asOf(null, '2026-10-14')).toBe('');
+  });
+
+  it('says so when a price is dated in the future', () => {
+    expect(asOf(spot('2999-01-01'), '2026-10-14')).toBe('spot 2999-01-01 (dated in the future)');
   });
 
   it('labels invented prices SAMPLE', () => {
@@ -22,6 +26,7 @@ describe('the date beside every figure', () => {
     expect(asOfTotals([line(spot('2026-09-01'))], '2026-10-14')).toBe('spot typed 2026-09-01. Oldest is 43 days old.');
     expect(asOfTotals([line(null)], '2026-10-14')).toBe('');
     expect(STALE_DAYS).toBe(7);
+    expect(BACKUP_NAG_DAYS).toBe(7);
   });
 });
 

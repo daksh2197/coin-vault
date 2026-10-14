@@ -846,6 +846,10 @@ input[type='file'] {
   .sheet-table td {
     border-bottom: 1px solid #999;
   }
+  .sheet-total th,
+  .sheet-total td {
+    color: #000 !important;
+  }
   .sheet-row,
   .sheet-total {
     break-inside: avoid;

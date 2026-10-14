@@ -128,4 +128,4 @@ What locking does not do: it protects the exported file, not the live vault in y
 
 ## 7. Where the data is, and how to wipe it
 
-It is in the browser's IndexedDB for this site's address. "Erase everything" on the page empties both stores. Clearing the site's data in the browser settings removes the database too.
+It is in the browser's IndexedDB for this site's address. "Erase everything" on the page empties the holdings and spots stores. Clearing the site's data in the browser settings removes the database too.

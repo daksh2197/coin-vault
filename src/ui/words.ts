@@ -6,6 +6,8 @@ import { METAL_LABEL, type Metal, type Spot } from '../core/types';
 
 /** A spot price older than this is flagged. A week is a long time in a metals market. */
 export const STALE_DAYS = 7;
+/** Safari can clear a site's storage after seven days without use, so a backup older than this gets a reminder. */
+export const BACKUP_NAG_DAYS = 7;
 
 export function asOf(spot: Spot | null, today: string): string {
   if (!spot) return '';
@@ -47,5 +49,5 @@ export function backupStatus(lastBackup: string | null, today: string, hasHoldin
   const day = lastBackup.slice(0, 10);
   const age = daysBetween(day, today);
   const base = `Last backup: ${day} (${ageWords(age)}).`;
-  return age > STALE_DAYS && hasHoldings ? `${base} Safari can clear a site left alone for seven days, so save a new one.` : base;
+  return age > BACKUP_NAG_DAYS && hasHoldings ? `${base} Safari can clear a site left alone for seven days, so save a new one.` : base;
 }

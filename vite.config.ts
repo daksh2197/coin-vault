@@ -11,7 +11,7 @@ const siteUrl = (process.env.SITE_URL || pkg.homepage || '.').replace(/\/$/, '')
 const repoUrl = process.env.REPO_URL || pkg.repository?.url || 'https://github.com';
 
 export default defineConfig({
-  // Relative paths, so the same build works at <user>.github.io/mol-bhav-meter/,
+  // Relative paths, so the same build works at <user>.github.io/coin-vault/,
   // on a custom domain, or from any subfolder.
   base: './',
   build: {

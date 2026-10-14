@@ -43,7 +43,7 @@ export type ParsedFile = { kind: 'plain'; vault: VaultExport } | { kind: 'encryp
 
 const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v);
 
-/** First look at a file's text. An encrypted envelope is only recognised here; decrypt.ts opens it. */
+/** First look at a file's text. An encrypted envelope is only recognised here; lock.ts opens it. */
 export function parseVaultText(text: string): Result<ParsedFile> {
   if (text.length > MAX_FILE_BYTES) return fail('That file is too large to be a Coin Vault backup.');
   let json: unknown;
