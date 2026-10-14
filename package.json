@@ -1,0 +1,37 @@
+{
+  "name": "coin-vault",
+  "version": "0.1.0",
+  "description": "A private ledger for bullion and collector coins: what you paid, melt value, premium. Local-first, no account.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "author": "Daksh Dua (https://dakshdua.ca)",
+  "homepage": "https://daksh2197.github.io/coin-vault",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/daksh2197/coin-vault"
+  },
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build && node scripts/stamp-sw.mjs",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/geist-mono": "^5.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "fake-indexeddb": "^6.2.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.4"
+  }
+}
