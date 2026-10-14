@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Coin Vault</title>
+    <meta
+      name="description"
+      content="A private ledger for bullion and collector coins: what you paid, what the metal is worth, and the gap. Your data stays on your device."
+    />
+    <meta name="theme-color" content="#111214" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Coin Vault" />
+    <meta property="og:description" content="A private ledger for coins and bullion: paid, melt value, premium. Nothing leaves your device." />
+    <script type="module" src="/src/main.ts"></script>
+  </head>
+  <body>
+    <a class="skip" href="#hero">Skip to the vault</a>
+
+    <header class="site-head" data-chrome>
+      <a class="brand" href="https://dakshdua.ca" aria-label="Daksh Dua, dakshdua.ca">
+        <span class="brand-tile" aria-hidden="true">DD</span>
+        <span>Daksh Dua</span>
+      </a>
+      <nav class="head-links" aria-label="About this tool">
+        <a href="#about">How it is stored</a>
+        <a href="%REPO_URL%">Source</a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="intro" data-chrome>
+        <h1>Coin Vault</h1>
+        <p class="lede">A private ledger for coins and bullion. What you paid, what the metal is worth, and the gap.</p>
+        <p class="aside">Everything stays on this device. No account, no sync, no tracking.</p>
+      </div>
+
+      <div id="banner" class="banner" role="alert" hidden></div>
+
+      <div id="vault-view">
+        <p id="sample-note" class="sample-note" hidden>
+          <span><strong>SAMPLE data.</strong> These coins and prices are invented to show how it works.</span>
+          <button type="button" class="text-button" id="remove-sample">Remove sample data</button>
+        </p>
+
+        <section class="hero" id="hero" tabindex="-1" aria-labelledby="hero-h">
+          <h2 class="vh" id="hero-h">Paid against melt</h2>
+          <p class="hero-label" id="hero-label">Premium over melt</p>
+          <p class="hero-gap" id="hero-gap">&mdash;</p>
+          <p class="hero-sub" id="hero-sub"></p>
+          <p class="vh" id="hero-live" role="status"></p>
+          <dl class="stats">
+            <div class="stat">
+              <dt>Paid</dt>
+              <dd id="stat-paid">&mdash;</dd>
+              <dd class="asof" id="asof-paid"></dd>
+            </div>
+            <div class="stat">
+              <dt>Melt value</dt>
+              <dd id="stat-melt">&mdash;</dd>
+              <dd class="asof" id="asof-melt"></dd>
+            </div>
+            <div class="stat">
+              <dt>Gain or loss</dt>
+              <dd id="stat-gain">&mdash;</dd>
+              <dd class="asof" id="asof-gain"></dd>
+            </div>
+          </dl>
+          <p class="hero-note" id="hero-excluded" hidden></p>
+          <p class="legal">Not financial advice. A calculator for your own records, not a valuation, and not affiliated with the Royal Canadian Mint or any dealer.</p>
+        </section>
+
+        <section class="block" id="spots" aria-labelledby="spots-h">
+          <h2 id="spots-h">Spot prices</h2>
+          <p class="help">
+            Type the price of one troy ounce in Canadian dollars, and the day you read it. Every figure that uses a price shows its date.
+            No free price feed with terms that allow this was found, so prices are typed by you.
+          </p>
+          <form id="spot-form" novalidate>
+            <div class="spot-rows" id="spot-rows"></div>
+            <div class="actions">
+              <button type="submit" class="btn btn-primary">Save spot prices</button>
+              <span id="spot-status" class="status" role="status"></span>
+            </div>
+          </form>
+        </section>
+
+        <section class="block" id="holdings" aria-labelledby="holdings-h">
+          <div class="block-head">
+            <h2 id="holdings-h">Holdings</h2>
+            <button type="button" class="btn btn-primary" id="add-holding" aria-expanded="false" aria-controls="holding-form">Add a coin or bar</button>
+          </div>
+
+          <form id="holding-form" class="panel" novalidate hidden>
+            <h3 id="form-title">Add a coin or bar</h3>
+            <p id="form-error" class="form-error" role="alert" hidden></p>
+
+            <div class="field">
+              <label for="f-name">Name</label>
+              <input id="f-name" name="name" type="text" maxlength="120" autocomplete="off" />
+              <p class="err" id="err-name"></p>
+            </div>
+
+            <div class="row2">
+              <div class="field">
+                <label for="f-metal">Metal</label>
+                <select id="f-metal" name="metal">
+                  <option value="gold">Gold</option>
+                  <option value="silver">Silver</option>
+                  <option value="platinum">Platinum</option>
+                  <option value="palladium">Palladium</option>
+                </select>
+                <p class="err" id="err-metal"></p>
+              </div>
+              <div class="field">
+                <label for="f-quantity">Quantity</label>
+                <input id="f-quantity" name="quantity" type="text" inputmode="numeric" autocomplete="off" value="1" />
+                <p class="err" id="err-quantity"></p>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="f-fineness">Fineness (purity)</label>
+              <input id="f-fineness" name="fineness" type="text" inputmode="decimal" autocomplete="off" aria-describedby="fineness-read" />
+              <p class="readout-line" id="fineness-read" aria-live="polite">Type 0.9999, 99.99 or 999.9.</p>
+              <div class="chips" role="group" aria-label="Common fineness">
+                <button type="button" class="chip" data-fineness="0.9999">0.9999</button>
+                <button type="button" class="chip" data-fineness="0.99999">0.99999</button>
+                <button type="button" class="chip" data-fineness="0.9995">0.9995</button>
+              </div>
+              <p class="err" id="err-fineness"></p>
+            </div>
+
+            <div class="field">
+              <label for="f-weight">Weight of one piece</label>
+              <div class="weight-row">
+                <input id="f-weight" name="weight" type="text" inputmode="decimal" autocomplete="off" aria-describedby="weight-read" />
+                <label class="vh" for="f-unit">Unit</label>
+                <select id="f-unit" name="unit">
+                  <option value="ozt">troy ounces</option>
+                  <option value="g">grams</option>
+                </select>
+              </div>
+              <p class="readout-line" id="weight-read" aria-live="polite">One troy ounce is exactly 31.1034768 g.</p>
+              <div class="chips" role="group" aria-label="Common sizes in troy ounces">
+                <button type="button" class="chip" data-size="0.05">1/20 oz</button>
+                <button type="button" class="chip" data-size="0.1">1/10 oz</button>
+                <button type="button" class="chip" data-size="0.25">1/4 oz</button>
+                <button type="button" class="chip" data-size="0.5">1/2 oz</button>
+                <button type="button" class="chip" data-size="1">1 oz</button>
+                <button type="button" class="chip" data-size="2">2 oz</button>
+                <button type="button" class="chip" data-size="5">5 oz</button>
+                <button type="button" class="chip" data-size="10">10 oz</button>
+              </div>
+              <p class="err" id="err-weight"></p>
+              <p class="err" id="err-unit"></p>
+            </div>
+
+            <div class="row2">
+              <div class="field">
+                <label for="f-paid">Paid for one piece (CAD)</label>
+                <input id="f-paid" name="paid" type="text" inputmode="decimal" autocomplete="off" />
+                <p class="err" id="err-paid"></p>
+              </div>
+              <div class="field">
+                <label for="f-paidOn">Bought on (optional)</label>
+                <input id="f-paidOn" name="paidOn" type="date" />
+                <p class="err" id="err-paidOn"></p>
+              </div>
+            </div>
+
+            <div class="row2">
+              <div class="field">
+                <label for="f-mint">Mint or maker (optional)</label>
+                <input id="f-mint" name="mint" type="text" maxlength="80" autocomplete="off" />
+                <p class="err" id="err-mint"></p>
+              </div>
+              <div class="field">
+                <label for="f-year">Year (optional)</label>
+                <input id="f-year" name="year" type="text" inputmode="numeric" maxlength="4" autocomplete="off" />
+                <p class="err" id="err-year"></p>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="f-location">Where it is kept (optional)</label>
+              <input id="f-location" name="location" type="text" maxlength="200" autocomplete="off" />
+              <p class="err" id="err-location"></p>
+            </div>
+
+            <div class="field">
+              <label for="f-note">Its story (optional)</label>
+              <textarea id="f-note" name="note" rows="3" maxlength="2000"></textarea>
+              <p class="err" id="err-note"></p>
+            </div>
+
+            <div class="actions">
+              <button type="submit" class="btn btn-primary" id="save-holding">Save</button>
+              <button type="button" class="btn btn-ghost" id="cancel-holding">Cancel</button>
+            </div>
+          </form>
+
+          <p id="holdings-status" class="vh" role="status"></p>
+          <div id="holdings-empty" class="empty" hidden>
+            <p>Nothing here yet. Add a coin or bar, or look around with invented sample data first.</p>
+            <button type="button" class="btn btn-ghost" id="load-sample">Load sample data</button>
+          </div>
+          <ul class="holding-list" id="holding-list"></ul>
+        </section>
+
+        <section class="block" id="allocation" aria-labelledby="alloc-h" hidden>
+          <h2 id="alloc-h">By metal</h2>
+          <p class="help" id="alloc-help"></p>
+          <div class="bar" id="alloc-bar" aria-hidden="true"></div>
+          <table class="alloc-table">
+            <caption class="vh">Share of melt value by metal</caption>
+            <thead>
+              <tr><th scope="col">Metal</th><th scope="col" class="num">Melt value</th><th scope="col" class="num">Share</th></tr>
+            </thead>
+            <tbody id="alloc-body"></tbody>
+          </table>
+        </section>
+
+        <section class="block" id="backup" aria-labelledby="backup-h">
+          <h2 id="backup-h">Backup and restore</h2>
+          <p class="help" id="backup-status"></p>
+
+          <div class="panel">
+            <h3>Save a backup file</h3>
+            <p class="help">One JSON file with your holdings and spot prices. It is the only way your data leaves this device, and only when you press the button.</p>
+            <div class="check">
+              <input type="checkbox" id="lock-on" />
+              <label for="lock-on">Lock the file with a passphrase</label>
+            </div>
+            <div id="lock-fields" hidden>
+              <p class="warn">If you forget this passphrase, nobody can recover the file. Not me, not anyone. There is no reset.</p>
+              <div class="field">
+                <label for="lock-pass">Passphrase (at least 8 characters)</label>
+                <input id="lock-pass" type="password" autocomplete="new-password" />
+              </div>
+              <div class="field">
+                <label for="lock-pass2">Type it again</label>
+                <input id="lock-pass2" type="password" autocomplete="new-password" />
+              </div>
+            </div>
+            <p class="err" id="err-export" role="alert"></p>
+            <div class="actions">
+              <button type="button" class="btn btn-primary" id="export-btn">Download backup</button>
+              <span id="export-status" class="status" role="status"></span>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>Restore from a backup file</h3>
+            <div class="field">
+              <label for="import-file">Choose a Coin Vault file</label>
+              <input id="import-file" type="file" accept=".json,application/json" />
+            </div>
+            <p class="err" id="err-import" role="alert"></p>
+            <div id="import-unlock" hidden>
+              <div class="field">
+                <label for="import-pass">This file is locked. Passphrase</label>
+                <input id="import-pass" type="password" autocomplete="off" />
+              </div>
+              <div class="actions"><button type="button" class="btn btn-primary" id="import-unlock-btn">Unlock</button></div>
+            </div>
+            <div id="import-choose" hidden>
+              <p id="import-summary" class="help"></p>
+              <div class="actions">
+                <button type="button" class="btn btn-primary" id="import-merge">Add to what is here</button>
+                <button type="button" class="btn btn-ghost" id="import-replace">Replace everything here</button>
+                <button type="button" class="btn btn-ghost" id="import-cancel">Cancel</button>
+              </div>
+            </div>
+            <p id="import-status" class="status" role="status"></p>
+          </div>
+
+          <div class="panel">
+            <h3>Erase this vault</h3>
+            <p class="help">Deletes every holding and spot price stored in this browser. Save a backup first.</p>
+            <div class="actions">
+              <button type="button" class="btn btn-ghost" id="erase-btn">Erase everything</button>
+              <button type="button" class="btn btn-danger" id="erase-confirm" hidden>Yes, erase it</button>
+              <button type="button" class="btn btn-ghost" id="erase-cancel" hidden>Keep it</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="block" id="sheet-link" aria-labelledby="sheet-h">
+          <h2 id="sheet-h">Inventory sheet</h2>
+          <p class="help">A clean page of your holdings for your records. Printing from anywhere in the app prints this sheet.</p>
+          <button type="button" class="btn btn-ghost" id="open-sheet">Open the inventory sheet</button>
+        </section>
+
+        <section class="block about" id="about" aria-labelledby="about-h" data-chrome>
+          <h2 id="about-h">How it is stored</h2>
+          <p>
+            The data lives in IndexedDB, a database built into your browser, on this device only. This site has no server that could receive it.
+            That also means nothing is backed up for you. Clearing site data erases the vault, and Safari can clear a site you have not opened for seven days.
+            Save a backup file now and then.
+          </p>
+          <p>
+            Photos are not supported in this version. Prices come from you, not from the internet.
+            Source and the long version: <a href="%REPO_URL%">the repository</a>.
+          </p>
+        </section>
+      </div>
+
+      <div id="sheet-view" hidden>
+        <div class="sheet-tools" data-noprint>
+          <button type="button" class="btn btn-ghost" id="close-sheet">Back to the vault</button>
+          <div class="check"><input type="checkbox" id="sheet-location" /><label for="sheet-location">Show where each is kept</label></div>
+          <div class="check"><input type="checkbox" id="sheet-notes" /><label for="sheet-notes">Show notes</label></div>
+          <button type="button" class="btn btn-primary" id="print-sheet">Print or save as PDF</button>
+        </div>
+        <article class="sheet" id="sheet" aria-labelledby="sheet-title"></article>
+      </div>
+    </main>
+
+    <footer class="site-foot" data-chrome>
+      <p>
+        MIT licence. Built in Calgary by <a href="https://dakshdua.ca">Daksh Dua</a>.
+      </p>
+    </footer>
+  </body>
+</html>

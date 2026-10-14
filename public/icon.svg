@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#111214"/>
+  <!-- a plain round coin: a ring, an inner ring and a gap that shows the premium -->
+  <circle cx="256" cy="256" r="150" fill="none" stroke="#FF5A1F" stroke-width="40"/>
+  <circle cx="256" cy="256" r="92" fill="none" stroke="#EDE8DD" stroke-opacity=".35" stroke-width="12"/>
+  <rect x="236" y="196" width="40" height="120" rx="8" fill="#EDE8DD"/>
+</svg>
